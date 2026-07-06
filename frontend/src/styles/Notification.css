@@ -1,0 +1,42 @@
+.notification{
+
+    position:fixed;
+
+    top:20px;
+    right:20px;
+
+    background:#4caf50;
+
+    padding:15px 25px;
+
+    border-radius:15px;
+
+    color:white;
+
+    font-weight:bold;
+
+    animation:fadeNotification .3s;
+
+    z-index:999;
+
+}
+
+@keyframes fadeNotification{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(-20px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}

@@ -1,0 +1,59 @@
+@keyframes float{
+
+    0%{
+
+        transform:
+                translateY(0);
+
+    }
+
+    50%{
+
+        transform:
+                translateY(-8px);
+
+    }
+
+    100%{
+
+        transform:
+                translateY(0);
+
+    }
+
+}
+.floatingText{
+
+    position:fixed;
+
+    color:#00ff88;
+
+    font-size:30px;
+
+    font-weight:bold;
+
+    pointer-events:none;
+
+    animation:floatUp 1s forwards;
+
+}
+
+@keyframes floatUp{
+
+    from{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+    to{
+
+        opacity:0;
+
+        transform:translateY(-100px);
+
+    }
+
+}
