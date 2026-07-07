@@ -16,7 +16,7 @@ import "./styles/Animations.css";
 import "./styles/Starfield.css";
 import "./styles/Quiz.css";
 
-const API = "http://localhost:8080/game";
+const API = "https://time-clikcer-java-xvoe.onrender.com/game";
 
 function App() {
 
