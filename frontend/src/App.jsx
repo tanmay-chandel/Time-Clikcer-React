@@ -136,15 +136,21 @@ function App() {
 
     }
 
-    function rewardPlayer() {
+    async function rewardPlayer(reward) {
 
-        setNotification("🎉 Correct! +100 Grammar Points");
+        const r = await fetch(API + "/reward?reward=" + reward, {
+            method: "POST"
+        });
+
+        const d = await r.json();
+
+        setPlayer(d);
+
+        setNotification(`🎉 Correct! +${reward} Grammar Points`);
 
         setTimeout(() => setNotification(""), 2000);
 
-        // Backend reward will be connected later.
     }
-
     return (
 
         <>

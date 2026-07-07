@@ -4,26 +4,49 @@ import "../styles/Quiz.css";
 
 function QuizModal({ open, onClose, onCorrect }) {
 
+    const TOTAL_QUESTIONS = 30;
+
     const [question, setQuestion] = useState(null);
     const [selected, setSelected] = useState(null);
     const [answered, setAnswered] = useState(false);
 
+    const [usedQuestions, setUsedQuestions] = useState([]);
+    const [currentQuestion, setCurrentQuestion] = useState(1);
+    const [correctAnswers, setCorrectAnswers] = useState(0);
+    const [finished, setFinished] = useState(false);
+
     useEffect(() => {
 
         if (open) {
-            loadQuestion();
+
+            setFinished(false);
+            setCurrentQuestion(1);
+            setCorrectAnswers(0);
+            setUsedQuestions([]);
+
+            loadQuestion([]);
+
         }
 
     }, [open]);
 
-    function loadQuestion() {
+    function loadQuestion(list = usedQuestions) {
+
+        let available = questions.filter(q => !list.includes(q.id));
+
+        if (available.length === 0) {
+            setFinished(true);
+            return;
+        }
 
         const random =
-            questions[Math.floor(Math.random() * questions.length)];
+            available[Math.floor(Math.random() * available.length)];
 
         setQuestion(random);
         setSelected(null);
         setAnswered(false);
+
+        setUsedQuestions(prev => [...prev, random.id]);
 
     }
 
@@ -35,12 +58,72 @@ function QuizModal({ open, onClose, onCorrect }) {
         setAnswered(true);
 
         if (index === question.answer) {
-            onCorrect();
+
+            setCorrectAnswers(c => c + 1);
+
+            onCorrect(question.reward);
+
         }
 
     }
 
     if (!open) return null;
+
+    if (finished) {
+
+        return (
+
+            <div className="quizOverlay">
+
+                <div className="quizModal">
+
+                    <h1>🎉 Quiz Complete!</h1>
+
+                    <h2>
+                        {correctAnswers} / {TOTAL_QUESTIONS}
+                    </h2>
+
+                    <p
+                        style={{
+                            fontSize: "22px",
+                            marginBottom: "20px"
+                        }}
+                    >
+                        Accuracy: {Math.round(correctAnswers / TOTAL_QUESTIONS * 100)}%
+                    </p>
+
+                    <button
+                        className="nextButton"
+                        onClick={() => {
+
+                            setFinished(false);
+                            setCurrentQuestion(1);
+                            setCorrectAnswers(0);
+                            setUsedQuestions([]);
+
+                            loadQuestion([]);
+
+                        }}
+                    >
+                        🔄 Play Again
+                    </button>
+
+                    <br /><br />
+
+                    <button
+                        className="closeButton"
+                        onClick={onClose}
+                    >
+                        Close
+                    </button>
+
+                </div>
+
+            </div>
+
+        );
+
+    }
 
     return (
 
@@ -50,8 +133,22 @@ function QuizModal({ open, onClose, onCorrect }) {
 
                 <h1>🧠 Grammar Quiz</h1>
 
+                <p
+                    style={{
+                        fontSize: "18px",
+                        color: "#aaa",
+                        marginBottom: "15px"
+                    }}
+                >
+                    Question {currentQuestion} / {TOTAL_QUESTIONS}
+                </p>
+
                 <p className="quizType">
-                    {question?.tense}
+                    📚 {question?.topic}
+                    &nbsp;&nbsp;|&nbsp;&nbsp;
+                    ⭐ {question?.difficulty.toUpperCase()}
+                    &nbsp;&nbsp;|&nbsp;&nbsp;
+                    💰 +{question?.reward}
                 </p>
 
                 <h2>
@@ -90,23 +187,47 @@ function QuizModal({ open, onClose, onCorrect }) {
 
                 {answered && (
 
-                    <div className="quizButtons">
+                    <>
 
-                        <button
-                            className="nextButton"
-                            onClick={loadQuestion}
+                        <p
+                            style={{
+                                marginTop: "20px",
+                                fontSize: "18px"
+                            }}
                         >
-                            Next Question
-                        </button>
+                            💡 {question.explanation}
+                        </p>
 
-                        <button
-                            className="closeButton"
-                            onClick={onClose}
-                        >
-                            Close
-                        </button>
+                        <div className="quizButtons">
 
-                    </div>
+                            <button
+                                className="nextButton"
+                                onClick={() => {
+
+                                    if (currentQuestion >= TOTAL_QUESTIONS) {
+                                        setFinished(true);
+                                        return;
+                                    }
+
+                                    setCurrentQuestion(q => q + 1);
+
+                                    loadQuestion();
+
+                                }}
+                            >
+                                Next Question
+                            </button>
+
+                            <button
+                                className="closeButton"
+                                onClick={onClose}
+                            >
+                                Close
+                            </button>
+
+                        </div>
+
+                    </>
 
                 )}
 
