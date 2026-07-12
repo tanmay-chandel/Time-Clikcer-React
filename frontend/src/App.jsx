@@ -6,7 +6,7 @@ import Notification from "./components/Notification";
 import FloatingText from "./components/FloatingText";
 import Starfield from "./components/Starfield";
 import QuizModal from "./components/QuizModal";
-
+import TipPopup from "./components/TipPopup";
 import tips from "./data/tips";
 import upgrades from "./data/upgrades";
 
@@ -258,7 +258,7 @@ function App() {
 
                         <br /><br />
 
-                        {currentTip}
+                        <TipPopup tip={currentTip} />
                     </div>
                 </div>
 
